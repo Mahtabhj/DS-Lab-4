@@ -18,7 +18,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
-mongoose.connect('mongodb://localhost:27017/Story', {
+mongoose.connect('mongodb://storydb:27017/Story', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 }).then(() => {
@@ -32,7 +32,7 @@ mongoose.connect('mongodb://localhost:27017/Story', {
 var Minio = require('minio')
 
 var minioClient = new Minio.Client({
-    endPoint: '127.0.0.1',
+    endPoint: "storyobjectdb",
     port: 9000,
     useSSL: false,
     accessKey: 'iaiuGULQK4BAOyVU',

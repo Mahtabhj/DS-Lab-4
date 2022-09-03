@@ -23,7 +23,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
-mongoose.connect('mongodb://localhost:27017/Assignment', {
+mongoose.connect('mongodb://userdb:27017/Assignment', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 }).then(() => {
@@ -37,7 +37,7 @@ mongoose.connect('mongodb://localhost:27017/Assignment', {
 var Minio = require('minio')
 
 var minioClient = new Minio.Client({
-  endPoint: '127.0.0.1',
+  endPoint: "storyobjectdb",
   port: 9000,
   useSSL: false,
   accessKey: 'iaiuGULQK4BAOyVU',
@@ -45,7 +45,7 @@ var minioClient = new Minio.Client({
 });
 
 
-minioClient.bucketExists('ppbucket', function(err, exists) {
+minioClient.bucketExists('story', function(err, exists) {
   if (err) {
     return console.log(err)
   }
@@ -77,7 +77,7 @@ app.post("/api/uploadprofile", upload.single('file'), (req, res) => {
   const directoryPath = path.join('./images/',req.file.filename);
   
 console.log(req.file.filename)
-  minioClient.fPutObject('ppbucket', req.file.filename, directoryPath, function(err, objInfo) {
+  minioClient.fPutObject('story', req.file.filename, directoryPath, function(err, objInfo) {
     if(err) {
         return console.log(err)
     }

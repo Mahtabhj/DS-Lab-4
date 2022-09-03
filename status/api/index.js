@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
-mongoose.connect('mongodb://localhost:27017/Status', {
+mongoose.connect('mongodb://statusdb:27017/Status', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 }).then(() => {
