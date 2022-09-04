@@ -46,7 +46,7 @@ const HostelSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      required: true,
+      required: false,
     },
     photo1: {
       type: String,
@@ -58,7 +58,7 @@ const HostelSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      required: true,
+      required: false,
     },
     categories: {
       type: Array,

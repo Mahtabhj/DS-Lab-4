@@ -47,7 +47,18 @@ minioClient.bucketExists('mybucket', function(err, exists) {
     return console.log('Bucket exists.')
   }
 })
+let minioBucketName = 'mybucket';
 
+
+(async () => {
+    
+    await minioClient.makeBucket(minioBucketName, "hello-there").catch((e) => {
+        console.log("error");
+    });
+
+    const bucketsList = await minioClient.listBuckets();
+    console.log("hhh" );
+})();
 
 var globalVariable={
   uuid: crypto.randomUUID()

@@ -2,6 +2,15 @@ const router = require("express").Router();
 
 const Hostel = require("../models/Hostel");
 
+function minio() {
+  return new Minio.Client({
+      endPoint: 'storyobjectdb',
+      port: 9000,
+      useSSL: false,
+      accessKey: 'iaiuGULQK4BAOyVU',
+      secretKey: '5fy8EBcf76NabKPF4qLDtESfLcbPfD9h'
+  });
+}
 //CREATE POST
 router.post("/", async (req, res) => {
   const newHostel = new Hostel(req.body);
@@ -60,15 +69,41 @@ router.delete("/:id", async (req, res) => {
 });
 
 //GET POST
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const hostel = await Hostel.findById(req.params.id);
+//     res.status(200).json(hostel);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
 router.get("/:id", async (req, res) => {
   try {
-    const hostel = await Hostel.findById(req.params.id);
-    res.status(200).json(hostel);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+    let data;
+     minioClient = minio();
+     minioClient.getObject("", req.params.id, (err, objStream) => {
+       
+        if(err) {
+            return res.status(404).send({ message: "Image not found" });
+        }
+        objStream.on('data', (chunk) => {
+            console.log("eta error 1?");
+            data = !data ? new Buffer(chunk) : Buffer.concat([data, chunk]);
 
+        });
+        console.log(req.params.id);
+   
+        objStream.on('end', () => {
+            res.writeHead(200, { 'Content-Type': 'image/png' });
+            res.write(data);
+            res.end();
+        });
+    });
+} catch (error) {
+    res.status(500).send({ message: "Internal Server Error at fetching image" });
+}
+});
 //GET ALL POSTS
 router.get("/", async (req, res) => {
   const username = req.query.user;
@@ -91,5 +126,36 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+
+// var getImage = ( (req,res) =>{
+
+//   try {
+//       let data;
+//        minioClient = minio();
+//        minioClient.getObject("mybucket", req.params.id, (err, objStream) => {
+         
+//           if(err) {
+//               return res.status(404).send({ message: "Image not found" });
+//           }
+//           objStream.on('data', (chunk) => {
+//               console.log("eta error 1?");
+//               data = !data ? new Buffer(chunk) : Buffer.concat([data, chunk]);
+
+//           });
+//           console.log(req.params.id);
+     
+//           objStream.on('end', () => {
+//               res.writeHead(200, { 'Content-Type': 'image/png' });
+//               res.write(data);
+//               res.end();
+//           });
+//       });
+//   } catch (error) {
+//       res.status(500).send({ message: "Internal Server Error at fetching image" });
+//   }
+// });
+
 
 module.exports = router;

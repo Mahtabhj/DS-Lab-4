@@ -49,7 +49,7 @@ const PostSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      required: true,
+      required: false,
     },
     photo1: {
       type: String,
@@ -61,7 +61,7 @@ const PostSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      required: true,
+      required: false,
     },
     categories: {
       type: Array,
